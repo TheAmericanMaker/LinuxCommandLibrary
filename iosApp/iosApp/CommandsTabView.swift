@@ -18,7 +18,7 @@ struct CommandsTabView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $selectedCommand) {
-                ForEach(store.visibleCommands(query: query), id: \.name) { command in
+                ForEach(store.filtered(query: query), id: \.name) { command in
                     let isSelected = selectedCommand == command.name
                     HStack {
                         Text(command.name)
@@ -35,9 +35,6 @@ struct CommandsTabView: View {
             .listStyle(.insetGrouped)
             .navigationTitle("Commands")
             .searchable(text: $query, prompt: "Search commands")
-            .onChange(of: query) { newValue in
-                store.search(query: newValue)
-            }
         } detail: {
             NavigationStack(path: $path) {
                 if let cmd = selectedCommand {
@@ -76,29 +73,31 @@ struct CommandsTabView: View {
     }
 }
 
-/// Owns the lifecycle of two KMP ViewModels and bridges their StateFlows
+/// Owns the lifecycle of CommandListViewModel and bridges its StateFlows
 /// into SwiftUI-observable @Published properties via SKIE's AsyncSequence support.
+/// Search filtering happens locally in Swift to avoid a per-keystroke KMP bridge.
 @MainActor
 final class CommandsStore: ObservableObject {
     private let listViewModel: CommandListViewModel
-    private let searchViewModel: SearchViewModel
 
     @Published private(set) var allCommands: [CommandInfo] = []
-    @Published private(set) var filteredCommands: [CommandInfo] = []
     @Published private(set) var bookmarkedNames: Set<String> = []
+
+    // Parallel to allCommands; pre-lowercased once so search doesn't allocate
+    // 7,700+ strings per keystroke.
+    private var lowerNames: [String] = []
 
     private var listTask: Task<Void, Never>?
     private var bookmarkTask: Task<Void, Never>?
-    private var searchTask: Task<Void, Never>?
 
     init() {
         listViewModel = KoinHelperKt.makeCommandListViewModel()
-        searchViewModel = KoinHelperKt.makeSearchViewModel()
 
         listTask = Task { [weak self] in
             guard let self else { return }
             for await commands in self.listViewModel.commands {
                 self.allCommands = commands
+                self.lowerNames = commands.map { $0.name.lowercased() }
             }
         }
         bookmarkTask = Task { [weak self] in
@@ -107,26 +106,34 @@ final class CommandsStore: ObservableObject {
                 self.bookmarkedNames = names
             }
         }
-        searchTask = Task { [weak self] in
-            guard let self else { return }
-            for await state in self.searchViewModel.uiState {
-                self.filteredCommands = state.filteredCommands
-            }
-        }
     }
 
     deinit {
         listTask?.cancel()
         bookmarkTask?.cancel()
-        searchTask?.cancel()
-        searchViewModel.cancel()
     }
 
-    func search(query: String) {
-        searchViewModel.search(searchText: query)
-    }
+    func filtered(query: String) -> [CommandInfo] {
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return allCommands }
+        let needle = trimmed.lowercased()
 
-    func visibleCommands(query: String) -> [CommandInfo] {
-        query.trimmingCharacters(in: .whitespaces).isEmpty ? allCommands : filteredCommands
+        var matches: [Int] = []
+        matches.reserveCapacity(64)
+        for i in lowerNames.indices where lowerNames[i].contains(needle) {
+            matches.append(i)
+        }
+        matches.sort { a, b in
+            let aLower = lowerNames[a]
+            let bLower = lowerNames[b]
+            let aExact = aLower == needle
+            let bExact = bLower == needle
+            if aExact != bExact { return aExact }
+            let aPrefix = aLower.hasPrefix(needle)
+            let bPrefix = bLower.hasPrefix(needle)
+            if aPrefix != bPrefix { return aPrefix }
+            return allCommands[a].name < allCommands[b].name
+        }
+        return matches.map { allCommands[$0] }
     }
 }

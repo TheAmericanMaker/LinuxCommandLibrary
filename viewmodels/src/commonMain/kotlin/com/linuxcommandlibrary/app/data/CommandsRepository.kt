@@ -7,6 +7,7 @@ class CommandsRepository(private val assetReader: AssetReader) {
 
     private var cachedCommands: List<CommandInfo>? = null
     private var cachedCommandNames: Set<String>? = null
+    private var cachedQueryIndex: List<Pair<CommandInfo, String>>? = null
 
     private val sectionsCache = linkedMapOf<String, List<CommandSectionInfo>>()
     private val sectionsCacheMaxSize = 50
@@ -29,14 +30,16 @@ class CommandsRepository(private val assetReader: AssetReader) {
 
         cachedCommands = commands
         cachedCommandNames = commands.mapTo(HashSet()) { it.name }
+        cachedQueryIndex = commands.map { it to it.name.lowercase() }
         return commands
     }
 
     fun getCommandsByQuery(query: String): List<CommandInfo> {
         val lowerQuery = query.lowercase()
+        if (cachedQueryIndex == null) getCommands()
+        val index = cachedQueryIndex ?: return emptyList()
 
-        return getCommands()
-            .map { cmd -> cmd to cmd.name.lowercase() }
+        return index
             .filter { (_, lowerName) -> lowerName.contains(lowerQuery) }
             .sortedWith(
                 compareBy(

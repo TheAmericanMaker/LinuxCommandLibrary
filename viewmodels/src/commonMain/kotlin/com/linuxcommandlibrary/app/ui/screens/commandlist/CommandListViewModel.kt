@@ -25,24 +25,22 @@ class CommandListViewModel(
     val bookmarkedNames = dataManager.bookmarkNames
 
     private var loadJob: Job? = null
-    private var bookmarkJob: Job? = null
 
     init {
+        // Load commands once, then re-sort on every bookmark change so bookmarked
+        // items float to the top. Combined into one coroutine so the bookmark
+        // sort always sees the loaded list (avoids a race where bookmarks emit
+        // first against an empty list and then never re-apply).
         loadJob = scope.launch(Dispatchers.Default) {
-            _commands.value = commandsRepository.getCommands()
-        }
-        // Re-sort the list whenever bookmarks change so bookmarked items float to the top.
-        bookmarkJob = scope.launch(Dispatchers.Default) {
+            val all = commandsRepository.getCommands()
             dataManager.bookmarkNames.collect { bookmarks ->
-                _commands.value = _commands.value.sortedBy { it.name !in bookmarks }
+                _commands.value = all.sortedBy { it.name !in bookmarks }
             }
         }
     }
 
     fun cancel() {
         loadJob?.cancel()
-        bookmarkJob?.cancel()
         loadJob = null
-        bookmarkJob = null
     }
 }
