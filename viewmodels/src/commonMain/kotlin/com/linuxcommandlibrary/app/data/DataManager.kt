@@ -1,5 +1,6 @@
 package com.linuxcommandlibrary.app.data
 
+import com.linuxcommandlibrary.app.data.migration.LEGACY_BOOKMARK_ID_TO_NAME
 import com.linuxcommandlibrary.app.platform.defaultAutoExpandCommandSections
 import com.linuxcommandlibrary.shared.platform.PreferencesStorage
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +19,42 @@ class DataManager(private val prefs: PreferencesStorage) {
     val bookmarkNames: StateFlow<Set<String>> = _bookmarkNames.asStateFlow()
 
     private fun loadBookmarks(): Set<String> {
+        val v2 = parseV2Bookmarks()
+        if (prefs.getBoolean(KEY_BOOKMARKS_V1_MIGRATED, false)) return v2
+
+        // Pre-v3.5.0 bookmarks were stored as comma-separated SQLite row IDs under
+        // KEY_BOOKMARKS. The v3.5.0 db→markdown migration switched to KEY_BOOKMARKS_V2
+        // (comma-separated names) but didn't translate existing entries, so users
+        // upgrading from a pre-v3.5.0 build saw their bookmarks vanish (issue #104).
+        // Translate legacy ids to names via the baked-in map and merge into V2.
+        val legacy = parseLegacyBookmarks()
+        if (legacy.isEmpty()) {
+            prefs.putBoolean(KEY_BOOKMARKS_V1_MIGRATED, true)
+            return v2
+        }
+
+        // Order matters: persist the merged V2 before the flag so that if we
+        // crash mid-migration we re-run on next launch (idempotent — the union
+        // of V2 and legacy is identical the second time).
+        val merged = v2 + legacy
+        saveBookmarkNames(merged)
+        prefs.putBoolean(KEY_BOOKMARKS_V1_MIGRATED, true)
+        prefs.putString(KEY_BOOKMARKS_V1, "")
+        return merged
+    }
+
+    private fun parseV2Bookmarks(): Set<String> {
         val bookmarksChain = prefs.getString(KEY_BOOKMARKS_V2, "")
         return bookmarksChain.split(",").filter { it.isNotBlank() }.toSet()
+    }
+
+    private fun parseLegacyBookmarks(): Set<String> {
+        val bookmarksChain = prefs.getString(KEY_BOOKMARKS_V1, "")
+        if (bookmarksChain.isBlank()) return emptySet()
+        return bookmarksChain.split(",")
+            .mapNotNull { it.trim().toLongOrNull() }
+            .mapNotNull { LEGACY_BOOKMARK_ID_TO_NAME[it] }
+            .toSet()
     }
 
     private fun saveBookmarkNames(names: Set<String>) {
@@ -47,7 +82,9 @@ class DataManager(private val prefs: PreferencesStorage) {
     fun isAutoExpandSections(): Boolean = prefs.getBoolean(KEY_AUTO_EXPAND_SECTIONS, defaultAutoExpandCommandSections)
 
     companion object {
+        const val KEY_BOOKMARKS_V1 = "KEY_BOOKMARKS"
         const val KEY_BOOKMARKS_V2 = "KEY_BOOKMARKS_V2"
+        const val KEY_BOOKMARKS_V1_MIGRATED = "KEY_BOOKMARKS_V1_MIGRATED"
         const val KEY_AUTO_EXPAND_SECTIONS = "auto_expand_sections"
     }
 }
