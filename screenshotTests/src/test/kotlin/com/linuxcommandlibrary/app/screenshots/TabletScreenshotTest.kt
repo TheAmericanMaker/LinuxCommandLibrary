@@ -1,0 +1,49 @@
+package com.linuxcommandlibrary.app.screenshots
+
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalInspectionMode
+import app.cash.paparazzi.DeviceConfig
+import app.cash.paparazzi.Paparazzi
+import com.linuxcommandlibrary.app.App
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.setResourceReaderAndroidContext
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.koin.compose.KoinApplication
+
+class TabletScreenshotTest {
+
+    @get:Rule
+    val paparazzi: Paparazzi = Paparazzi(
+        deviceConfig = DeviceConfig.PIXEL_TABLET.copy(softButtons = false),
+        showSystemUi = true,
+        useDeviceResolution = true,
+        maxPercentDifference = 0.1,
+    )
+
+    @OptIn(ExperimentalResourceApi::class)
+    @Before
+    fun setup() {
+        setResourceReaderAndroidContext(paparazzi.context)
+    }
+
+    private fun snap(dark: Boolean, deeplink: String) {
+        val theme = if (dark) "android:Theme.Material.NoActionBar" else "android:Theme.Material.Light.NoActionBar"
+        paparazzi.unsafeUpdateConfig(theme = theme)
+        paparazzi.snapshot {
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                KoinApplication(application = { modules(screenshotKoinModules()) }) {
+                    WithNavOwner {
+                        App(initialDeeplink = deeplink, darkMode = dark)
+                    }
+                }
+            }
+        }
+    }
+
+    @Test fun screen01_mkdir() = snap(dark = true, deeplink = "/man/mkdir")
+    @Test fun screen02_tips() = snap(dark = false, deeplink = "/tips")
+    @Test fun screen03_systemInfo() = snap(dark = true, deeplink = "/basic/systeminformation")
+    @Test fun screen04_search() = snap(dark = false, deeplink = "/search/mk")
+}

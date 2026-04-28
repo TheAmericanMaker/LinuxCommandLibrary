@@ -34,10 +34,10 @@ class SearchState(
 }
 
 @Composable
-fun rememberSearchState(): SearchState {
+fun rememberSearchState(initialText: String = ""): SearchState {
     val textFieldValue = rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(text = "", selection = TextRange(0)))
+        mutableStateOf(TextFieldValue(text = initialText, selection = TextRange(initialText.length)))
     }
-    val isVisible = rememberSaveable { mutableStateOf(false) }
+    val isVisible = rememberSaveable { mutableStateOf(initialText.isNotEmpty()) }
     return remember { SearchState(textFieldValue, isVisible) }
 }

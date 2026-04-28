@@ -1,6 +1,7 @@
 package com.linuxcommandlibrary.app
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,8 @@ import androidx.compose.material3.NavigationItemColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldDestinationItem
 import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
@@ -40,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.composable
@@ -69,12 +73,16 @@ import org.koin.compose.koinInject
 private sealed class InitialSelection {
     data class Command(val name: String) : InitialSelection()
     data class Basics(val id: String, val title: String) : InitialSelection()
+    data class SearchQuery(val query: String) : InitialSelection()
 }
 
 private data class DeeplinkResult(val route: Route, val selection: InitialSelection?)
 
 @Composable
-fun App(initialDeeplink: String? = null) {
+fun App(
+    initialDeeplink: String? = null,
+    darkMode: Boolean = isSystemInDarkTheme(),
+) {
     val reviewHandler: ReviewHandler = koinInject()
     val commandsRepository: CommandsRepository = koinInject()
     LaunchedEffect(Unit) {
@@ -85,7 +93,7 @@ fun App(initialDeeplink: String? = null) {
         }
     }
 
-    LinuxTheme {
+    LinuxTheme(darkMode = darkMode) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,23 +113,39 @@ fun LinuxApp(initialDeeplink: String? = null) {
     }
     val initialRoute = deeplinkResult.route
 
-    val searchState = rememberSearchState()
+    val initialSearchQuery = (deeplinkResult.selection as? InitialSelection.SearchQuery)?.query.orEmpty()
+    val searchState = rememberSearchState(initialText = initialSearchQuery)
     val openAppAction = rememberOpenAppAction()
     val scope = rememberCoroutineScope()
 
-    val commandsNavigator = rememberListDetailPaneScaffoldNavigator<String>()
-    val basicsNavigator = rememberListDetailPaneScaffoldNavigator<String>()
+    // Initialize navigators with the deep-linked detail pane up-front so we don't flash the
+    // list pane for one frame before navigating; this also makes the first composition
+    // render the final UI, which screenshot tooling depends on.
+    val initialCommandName = (deeplinkResult.selection as? InitialSelection.Command)?.name
+    val initialBasicId = (deeplinkResult.selection as? InitialSelection.Basics)?.id
+    val commandsNavigator = rememberListDetailPaneScaffoldNavigator(
+        initialDestinationHistory = if (initialCommandName != null) {
+            listOf(
+                ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List, null),
+                ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.Detail, initialCommandName),
+            )
+        } else {
+            listOf(ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List, null))
+        },
+    )
+    val basicsNavigator = rememberListDetailPaneScaffoldNavigator(
+        initialDestinationHistory = if (initialBasicId != null) {
+            listOf(
+                ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List, null),
+                ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.Detail, initialBasicId),
+            )
+        } else {
+            listOf(ThreePaneScaffoldDestinationItem(ListDetailPaneScaffoldRole.List, null))
+        },
+    )
     var pendingCommandSelection by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingBasicSelection by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingExpandGroupId by rememberSaveable { mutableStateOf<Long?>(null) }
-
-    LaunchedEffect(Unit) {
-        when (val selection = deeplinkResult.selection) {
-            is InitialSelection.Command -> pendingCommandSelection = selection.name
-            is InitialSelection.Basics -> pendingBasicSelection = selection.id
-            null -> {}
-        }
-    }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination
@@ -364,6 +388,11 @@ private fun parseDeeplink(url: String?): DeeplinkResult? {
                 Route.Basics,
                 InitialSelection.Basics(id = categoryId, title = categoryId),
             )
+        }
+
+        url.contains("/search/") -> {
+            val query = url.substringAfterLast("/search/").removeSuffix(".html")
+            DeeplinkResult(Route.Commands, InitialSelection.SearchQuery(query))
         }
 
         url.endsWith("/") || url.endsWith("/index.html") ->

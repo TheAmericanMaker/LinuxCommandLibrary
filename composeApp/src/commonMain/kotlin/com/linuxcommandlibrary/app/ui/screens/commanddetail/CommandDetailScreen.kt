@@ -52,7 +52,7 @@ fun CommandDetailScreen(
 }
 
 @Composable
-private fun CommandDetailContent(
+fun CommandDetailContent(
     uiState: CommandDetailUiState,
     onNavigate: (NavEvent) -> Unit,
     onToggleExpanded: (Long) -> Unit,

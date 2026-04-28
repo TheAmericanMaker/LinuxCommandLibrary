@@ -31,8 +31,10 @@ data class CustomColors(
 val LocalCustomColors = compositionLocalOf { CustomColors() }
 
 @Composable
-fun LinuxTheme(content: @Composable () -> Unit) {
-    val darkMode = isSystemInDarkTheme()
+fun LinuxTheme(
+    darkMode: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) {
     val darkColors = darkColorScheme(
         primary = BrandRed,
         onPrimary = Color.White,
