@@ -19,6 +19,8 @@ import org.jetbrains.compose.resources.Font
 
 val BrandRed = Color(0xFFe45151)
 val BrandDarkRed = Color(0xFFc62828)
+val BrandRedMuted = Color(0xFF5E2A2A)
+val BrandRedSurface = Color(0xFFFFE5E0)
 
 data class CustomColors(
     val navBarBackground: Color = Color(0xFF00695C),
@@ -33,7 +35,15 @@ fun LinuxTheme(content: @Composable () -> Unit) {
     val darkMode = isSystemInDarkTheme()
     val darkColors = darkColorScheme(
         primary = BrandRed,
+        onPrimary = Color.White,
+        primaryContainer = BrandDarkRed,
+        onPrimaryContainer = Color.White,
+        secondary = BrandRed,
+        onSecondary = Color.White,
+        secondaryContainer = BrandRedMuted,
+        onSecondaryContainer = Color.White,
         onSurface = Color.White,
+        onSurfaceVariant = Color(0xFFCCCCCC),
         background = Color(0xFF262626),
         surface = Color(0xFF262626),
         surfaceContainerLowest = Color(0xFF1A1A1A),
@@ -46,7 +56,15 @@ fun LinuxTheme(content: @Composable () -> Unit) {
     )
     val lightColors = lightColorScheme(
         primary = BrandRed,
+        onPrimary = Color.White,
+        primaryContainer = BrandRedSurface,
+        onPrimaryContainer = BrandDarkRed,
+        secondary = BrandRed,
+        onSecondary = Color.White,
+        secondaryContainer = BrandRedSurface,
+        onSecondaryContainer = BrandDarkRed,
         onSurface = Color.Black,
+        onSurfaceVariant = Color(0xFF555555),
         background = Color.White,
         surface = Color.White,
         surfaceContainerLowest = Color.White,

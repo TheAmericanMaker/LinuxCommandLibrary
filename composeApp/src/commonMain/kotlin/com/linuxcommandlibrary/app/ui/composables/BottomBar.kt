@@ -65,14 +65,9 @@ fun BottomBar(
         ) {
             bottomTabs.forEach { tab ->
                 val isSelected = when (tab.route) {
-                    Route.Basics -> currentDestination?.hasRoute<Route.Basics>() == true ||
-                        currentDestination?.hasRoute<Route.BasicGroups>() == true
-
+                    Route.Basics -> currentDestination?.hasRoute<Route.Basics>() == true
                     Route.Commands -> currentDestination?.hasRoute<Route.Commands>() == true
-
                     Route.Tips -> currentDestination?.hasRoute<Route.Tips>() == true
-
-                    else -> false
                 }
                 val tint = if (isSelected) selectedColor else unselectedColor
 

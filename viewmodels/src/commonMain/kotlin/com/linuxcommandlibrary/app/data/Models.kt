@@ -12,6 +12,13 @@ data class BasicGroup(
     val description: String,
 )
 
+data class BasicGroupMatch(
+    val groupId: Long,
+    val description: String,
+    val categoryId: String,
+    val categoryTitle: String,
+)
+
 data class BasicCommand(
     val id: Long,
     val command: String,

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +30,7 @@ import com.linuxcommandlibrary.app.ui.composables.rememberIconPainter
 fun CommandListScreen(
     viewModel: CommandListViewModel,
     onNavigate: (NavEvent) -> Unit,
+    selectedName: String? = null,
 ) {
     val commands by viewModel.commands.collectAsState()
     val bookmarkedNames by viewModel.bookmarkedNames.collectAsState()
@@ -37,6 +39,7 @@ fun CommandListScreen(
         commands = commands,
         bookmarkedNames = bookmarkedNames,
         onNavigate = onNavigate,
+        selectedName = selectedName,
     )
 }
 
@@ -45,6 +48,7 @@ private fun ComposeListContent(
     commands: List<CommandInfo>,
     bookmarkedNames: Set<String>,
     onNavigate: (NavEvent) -> Unit,
+    selectedName: String?,
 ) {
     val listState = rememberLazyListState()
     WithScrollbar(
@@ -66,6 +70,7 @@ private fun ComposeListContent(
                     command = command,
                     onNavigate = onNavigate,
                     isBookmarked = command.name in bookmarkedNames,
+                    isSelected = command.name == selectedName,
                 )
             }
         }
@@ -86,8 +91,14 @@ fun CommandListItem(
     searchText: String = "",
     onNavigate: (NavEvent) -> Unit,
     isBookmarked: Boolean,
+    isSelected: Boolean = false,
 ) {
     val bookmarkPainter = rememberIconPainter(AppIcon.BOOKMARK)
+    val containerColor = if (isSelected) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        MaterialTheme.colorScheme.surface
+    }
 
     ListItem(
         headlineContent = {
@@ -96,6 +107,7 @@ fun CommandListItem(
                 pattern = searchText,
             )
         },
+        colors = ListItemDefaults.colors(containerColor = containerColor),
         trailingContent = if (isBookmarked) {
             {
                 Icon(

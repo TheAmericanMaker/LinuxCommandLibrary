@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,12 +30,14 @@ import com.linuxcommandlibrary.app.ui.composables.rememberIconPainter
 fun BasicCategoriesScreen(
     viewModel: BasicCategoriesViewModel,
     onNavigate: (NavEvent) -> Unit,
+    selectedId: String? = null,
 ) {
     val basicCategories by viewModel.basicCategories.collectAsState()
 
     BasicCategoriesContent(
         basicCategories = basicCategories,
         onNavigate = onNavigate,
+        selectedId = selectedId,
     )
 }
 
@@ -42,6 +45,7 @@ fun BasicCategoriesScreen(
 private fun BasicCategoriesContent(
     basicCategories: List<BasicCategory>,
     onNavigate: (NavEvent) -> Unit,
+    selectedId: String?,
 ) {
     val gridState = rememberLazyGridState()
     WithScrollbar(
@@ -60,6 +64,12 @@ private fun BasicCategoriesContent(
                 key = { it.id },
                 contentType = { "basic_category_item" },
             ) { basicCategory ->
+                val isSelected = basicCategory.id == selectedId
+                val containerColor = if (isSelected) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surface
+                }
                 ListItem(
                     headlineContent = { Text(basicCategory.title) },
                     leadingContent = {
@@ -70,6 +80,7 @@ private fun BasicCategoriesContent(
                             modifier = Modifier.size(40.dp),
                         )
                     },
+                    colors = ListItemDefaults.colors(containerColor = containerColor),
                     modifier = Modifier
                         .pointerHoverIcon(PointerIcon.Hand)
                         .debouncedClickable {

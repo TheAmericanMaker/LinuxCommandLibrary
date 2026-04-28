@@ -44,4 +44,10 @@ class BasicGroupsViewModel(
             currentState.copy(collapsedMap = newMap.toMap())
         }
     }
+
+    fun expand(id: Long) {
+        _uiState.update { currentState ->
+            currentState.copy(collapsedMap = currentState.collapsedMap + (id to false))
+        }
+    }
 }

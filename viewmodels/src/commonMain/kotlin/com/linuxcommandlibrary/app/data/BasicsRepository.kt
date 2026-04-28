@@ -88,6 +88,26 @@ class BasicsRepository(private val assetReader: AssetReader) {
     fun usesCardLayout(categoryId: String): Boolean = categoryId.endsWith("texteditor") ||
         categoryId in setOf("shellscripting", "tmux", "regularexpressions", "terminalgames")
 
+    fun getMatchingGroups(query: String): List<BasicGroupMatch> {
+        if (query.isBlank()) return emptyList()
+        val lower = query.lowercase()
+        val matches = mutableListOf<BasicGroupMatch>()
+        for (category in getCategories()) {
+            val (groups, _) = getGroupsAndCommands(category.id)
+            for (group in groups) {
+                if (group.description.lowercase().contains(lower)) {
+                    matches += BasicGroupMatch(
+                        groupId = group.id,
+                        description = group.description,
+                        categoryId = category.id,
+                        categoryTitle = category.title,
+                    )
+                }
+            }
+        }
+        return matches
+    }
+
     private fun parseCommandLine(line: String): Pair<String, String> {
         val codeContent = line.trim().removeSurrounding("```")
 

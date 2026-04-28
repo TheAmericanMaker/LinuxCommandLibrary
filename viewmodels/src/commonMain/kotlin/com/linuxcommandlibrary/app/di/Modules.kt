@@ -30,7 +30,7 @@ val commonModule = module {
     factory { params -> CommandDetailViewModel(params.get(), get(), get(), get()) }
     factory { TipsViewModel(get(), get()) }
     factory { CommandListViewModel(get(), get(), get()) }
-    factory { SearchViewModel(get(), get()) }
+    factory { SearchViewModel(get(), get(), get()) }
 }
 
 /**

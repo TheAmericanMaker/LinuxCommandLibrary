@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -12,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -33,12 +35,27 @@ import com.linuxcommandlibrary.shared.getCommandList
 fun BasicGroupsScreen(
     viewModel: BasicGroupsViewModel,
     onNavigate: (NavEvent) -> Unit = {},
+    focusGroupId: Long? = null,
+    onFocusConsumed: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val toggleCollapse = remember(viewModel) { viewModel::toggleCollapse }
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(uiState.basicGroups, focusGroupId) {
+        val gid = focusGroupId ?: return@LaunchedEffect
+        if (uiState.basicGroups.isEmpty()) return@LaunchedEffect
+        val index = uiState.basicGroups.indexOfFirst { it.id == gid }
+        if (index >= 0) {
+            viewModel.expand(gid)
+            listState.animateScrollToItem(index)
+            onFocusConsumed()
+        }
+    }
 
     BasicGroupsContent(
         uiState = uiState,
+        listState = listState,
         toggleCollapse = toggleCollapse,
         onNavigate = onNavigate,
     )
@@ -47,10 +64,10 @@ fun BasicGroupsScreen(
 @Composable
 fun BasicGroupsContent(
     uiState: BasicGroupsUiState,
+    listState: LazyListState,
     toggleCollapse: (Long) -> Unit,
     onNavigate: (NavEvent) -> Unit,
 ) {
-    val listState = rememberLazyListState()
     SelectionContainer {
         WithScrollbar(
             state = listState,
