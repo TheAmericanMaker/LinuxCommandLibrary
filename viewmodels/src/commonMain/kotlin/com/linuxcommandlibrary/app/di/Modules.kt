@@ -30,7 +30,10 @@ val commonModule = module {
     factory { params -> CommandDetailViewModel(params.get(), get(), get(), get()) }
     factory { TipsViewModel(get(), get()) }
     factory { CommandListViewModel(get(), get(), get()) }
-    factory { SearchViewModel(get(), get(), get()) }
+    // Single so its uiState survives a navigate-to-detail/back round-trip;
+    // otherwise SearchScreen briefly flashes "404 command not found" while the
+    // async search re-runs against an empty initial state.
+    single { SearchViewModel(get(), get(), get()) }
 }
 
 /**

@@ -14,6 +14,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -102,7 +103,11 @@ fun CommandsPaneScreen(
                     CommandsDetailPane(
                         commandName = selected,
                         viewModel = detailViewModel,
-                        onBack = { scope.launch { navigator.navigateBack() } },
+                        onBack = {
+                            scope.launch {
+                                navigator.navigateBack(BackNavigationBehavior.PopUntilContentChange)
+                            }
+                        },
                         onNavigate = onNavigate,
                     )
                 }

@@ -12,6 +12,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -134,7 +135,11 @@ fun BasicsPaneScreen(
                     ) {
                         PaneTopBar(
                             title = selectedTitle,
-                            onBack = { scope.launch { navigator.navigateBack() } },
+                            onBack = {
+                                scope.launch {
+                                    navigator.navigateBack(BackNavigationBehavior.PopUntilContentChange)
+                                }
+                            },
                         )
                         if (usesCardLayout) {
                             val editorViewModel = remember(selectedId, koinScope) {

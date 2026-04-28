@@ -18,6 +18,7 @@ import androidx.compose.material3.NavigationItemColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigation.BackNavigationBehavior
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
@@ -163,14 +164,18 @@ fun LinuxApp(initialDeeplink: String? = null) {
         }
     }
 
+    // PopUntilContentChange so chained see-also detail screens pop one at a time;
+    // the default PopUntilScaffoldValueChange treats Detail("ls") and Detail("rm")
+    // as the same scaffold value and pops both together.
+    val backBehavior = BackNavigationBehavior.PopUntilContentChange
     BackHandler(
-        enabled = (isOnCommands && commandsNavigator.canNavigateBack()) ||
-            (isOnBasics && basicsNavigator.canNavigateBack()),
+        enabled = (isOnCommands && commandsNavigator.canNavigateBack(backBehavior)) ||
+            (isOnBasics && basicsNavigator.canNavigateBack(backBehavior)),
     ) {
         scope.launch {
             when {
-                isOnCommands -> commandsNavigator.navigateBack()
-                isOnBasics -> basicsNavigator.navigateBack()
+                isOnCommands -> commandsNavigator.navigateBack(backBehavior)
+                isOnBasics -> basicsNavigator.navigateBack(backBehavior)
             }
         }
     }
