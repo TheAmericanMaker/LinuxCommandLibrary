@@ -1,0 +1,6 @@
+Added new Linux commands
+Fixed macOS status bar appearance
+Fixed content alignment and horizontal layout spacing
+Refined command detail UI
+Hide Android keyboard when tapping a search result
+Removed unnecessary animations

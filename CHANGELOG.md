@@ -1,3 +1,18 @@
+## v4.0.1 — 2026-04-29
+
+### Features
+- Added new Linux commands
+
+### Fixes
+- Fix macOS status bar appearance
+- Fix content alignment in command details
+- Fix horizontal layout spacing
+
+### Improvements
+- Refined command detail UI
+- Hide Android keyboard when tapping a search result
+- Removed unnecessary animations
+
 ## v4.0.0 — 2026-04-29
 
 ### Features
