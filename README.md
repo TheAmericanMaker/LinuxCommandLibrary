@@ -53,11 +53,11 @@ yay -S lcl-bin
 <img src="https://raw.githubusercontent.com/SimonSchubert/LinuxCommandBibliotheca/master/art/screen-ios-2.png" width="200">
 </p>
 
-### Desktop screenshots
+### Desktop/Tablet screenshots
 
 <p>
-<img src="https://raw.githubusercontent.com/SimonSchubert/LinuxCommandBibliotheca/master/art/screen-desktop-1.png" width="400">
-<img src="https://raw.githubusercontent.com/SimonSchubert/LinuxCommandBibliotheca/master/art/screen-desktop-2.png" width="400">
+<img src="https://raw.githubusercontent.com/SimonSchubert/LinuxCommandBibliotheca/master/art/screen-tablet-1.png" width="400">
+<img src="https://raw.githubusercontent.com/SimonSchubert/LinuxCommandBibliotheca/master/art/screen-tablet-2.png" width="400">
 </p>
 
 ### CLI screenshot
