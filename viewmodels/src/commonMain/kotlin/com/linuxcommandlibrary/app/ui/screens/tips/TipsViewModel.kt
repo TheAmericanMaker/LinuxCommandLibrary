@@ -6,35 +6,21 @@ import com.linuxcommandlibrary.shared.TextElement
 import com.linuxcommandlibrary.shared.TipInfo
 import com.linuxcommandlibrary.shared.TipSectionElement
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class TipsViewModel(
     private val tipsRepository: TipsRepository,
-    private val scope: CoroutineScope,
 ) {
-    private val _tips = MutableStateFlow<List<TipInfo>>(emptyList())
-    val tips = _tips.asStateFlow()
+    // Eager load: the markdown file is small (<10KB), parses in microseconds, and an async
+    // launch on Dispatchers.Default loses a race against Paparazzi snapshots on slower CI
+    // runners. Compose's idle-detection only waits for compose-internal work, not for
+    // coroutines on a Koin-managed scope.
+    val tips = MutableStateFlow(loadInitialTips()).asStateFlow()
 
-    private var loadJob: Job? = null
-
-    init {
-        loadJob = scope.launch(Dispatchers.Default) {
-            val tips = tipsRepository.getTips()
-            _tips.value = if (showAndroidTerminalTip) {
-                tips + createTerminalSetupTip()
-            } else {
-                tips
-            }
-        }
-    }
-
-    fun cancel() {
-        loadJob?.cancel()
+    private fun loadInitialTips(): List<TipInfo> {
+        val tips = tipsRepository.getTips()
+        return if (showAndroidTerminalTip) tips + createTerminalSetupTip() else tips
     }
 
     private fun createTerminalSetupTip(): TipInfo {

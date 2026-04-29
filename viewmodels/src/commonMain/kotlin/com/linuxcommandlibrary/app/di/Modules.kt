@@ -28,7 +28,7 @@ val commonModule = module {
     factory { params -> BasicEditorViewModel(params.get(), get(), get()) }
     factory { params -> BasicGroupsViewModel(params.get(), get(), get()) }
     factory { params -> CommandDetailViewModel(params.get(), get(), get(), get()) }
-    factory { TipsViewModel(get(), get()) }
+    factory { TipsViewModel(get()) }
     // Single so the loaded commands list survives a navigate-to-detail/back round-trip.
     // With a factory, the list pane gets a fresh instance whose `commands` starts as
     // emptyList() and populates asynchronously — restoring LazyListState during that
