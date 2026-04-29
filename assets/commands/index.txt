@@ -2520,6 +2520,7 @@ gist.md
 git-abort.md
 git-absorb.md
 git-add.md
+git-agecrypt.md
 git-alias.md
 git-am.md
 git-annex.md
@@ -5925,6 +5926,7 @@ pr.md
 pre-commit.md
 preconv.md
 prefect.md
+prek.md
 prename.md
 presenterm.md
 prettier.md
@@ -7408,6 +7410,7 @@ tidy.md
 tifftopnm.md
 tig.md
 tigervnc.md
+tigris.md
 tilda.md
 tilde.md
 time.md
