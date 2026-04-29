@@ -3855,6 +3855,7 @@ latte-dock.md
 launchctl.md
 lavadecode.md
 lavat.md
+lavinmq.md
 laydown.md
 lazyagent.md
 lazycelery.md
