@@ -11,10 +11,16 @@ kotlin {
 
 android {
     namespace = "com.linuxcommandlibrary.app.screenshots"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
     }
 
     sourceSets {
@@ -32,12 +38,13 @@ val preparePaparazzi by tasks.registering {
     dependsOn(":composeApp:convertXmlValueResourcesForCommonMain")
 }
 
-tasks.matching {
-    it.name.startsWith("testDebug") ||
-        (it.name.startsWith("merge") && it.name.endsWith("Assets"))
-}.configureEach {
-    dependsOn(preparePaparazzi)
-}
+tasks
+    .matching {
+        it.name.startsWith("testDebug") ||
+            (it.name.startsWith("merge") && it.name.endsWith("Assets"))
+    }.configureEach {
+        dependsOn(preparePaparazzi)
+    }
 
 tasks.withType<Test>().configureEach {
     reports.html.required.set(false)
@@ -57,12 +64,13 @@ tasks.register("updateScreenshots") {
     val fastlaneTabletFile = fastlaneTablet.asFile
 
     doLast {
-        val phoneMap = mapOf(
-            "screen01_mkdir" to "01",
-            "screen02_tips" to "02",
-            "screen03_systemInfo" to "03",
-            "screen04_search" to "04",
-        )
+        val phoneMap =
+            mapOf(
+                "screen01_mkdir" to "01",
+                "screen02_tips" to "02",
+                "screen03_systemInfo" to "03",
+                "screen04_search" to "04",
+            )
 
         val allSnapshots = snapshotsDirFile.listFiles()?.toList().orEmpty()
 
@@ -70,13 +78,15 @@ tasks.register("updateScreenshots") {
         fastlaneTabletFile.mkdirs()
 
         phoneMap.forEach { (testName, fastlaneNumber) ->
-            val phoneSnap = allSnapshots.firstOrNull { it.name.endsWith("_PhoneScreenshotTest_$testName.png") }
-                ?: error("Missing phone snapshot for $testName")
+            val phoneSnap =
+                allSnapshots.firstOrNull { it.name.endsWith("_PhoneScreenshotTest_$testName.png") }
+                    ?: error("Missing phone snapshot for $testName")
             phoneSnap.copyTo(fastlanePhoneFile.resolve("$fastlaneNumber.png"), overwrite = true)
             println("Phone -> fastlane/$fastlaneNumber.png")
 
-            val tabletSnap = allSnapshots.firstOrNull { it.name.endsWith("_TabletScreenshotTest_$testName.png") }
-                ?: error("Missing tablet snapshot for $testName")
+            val tabletSnap =
+                allSnapshots.firstOrNull { it.name.endsWith("_TabletScreenshotTest_$testName.png") }
+                    ?: error("Missing tablet snapshot for $testName")
             tabletSnap.copyTo(fastlaneTabletFile.resolve("$fastlaneNumber.png"), overwrite = true)
             println("Tablet -> fastlane/$fastlaneNumber.png")
         }

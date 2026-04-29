@@ -15,15 +15,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.linuxcommandlibrary.app.ui.AppIcons
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun InlineSearchField(
     searchState: SearchState,
@@ -31,8 +34,16 @@ fun InlineSearchField(
     modifier: Modifier = Modifier,
 ) {
     val focusStealer = remember { FocusRequester() }
+    val textFieldFocus = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         focusStealer.requestFocus()
+    }
+    LaunchedEffect(searchState.focusEpoch) {
+        if (searchState.focusEpoch > 0) {
+            textFieldFocus.requestFocus()
+            keyboardController?.show()
+        }
     }
     Box(modifier = modifier) {
         Box(
@@ -46,7 +57,8 @@ fun InlineSearchField(
             onValueChange = { searchState.updateText(it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .focusRequester(textFieldFocus),
             shape = RoundedCornerShape(28.dp),
             placeholder = { Text(placeholder) },
             leadingIcon = {

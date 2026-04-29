@@ -11,10 +11,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 class SearchState(
     private val textFieldValue: MutableState<TextFieldValue>,
     private val isVisibleState: MutableState<Boolean>,
+    private val focusEpochState: MutableState<Int>,
 ) {
     val searchText: String get() = textFieldValue.value.text
     val currentValue: TextFieldValue get() = textFieldValue.value
     val isVisible: Boolean get() = isVisibleState.value
+    val focusEpoch: Int get() = focusEpochState.value
     fun updateText(value: TextFieldValue) {
         textFieldValue.value = value
     }
@@ -31,6 +33,9 @@ class SearchState(
         textFieldValue.value = TextFieldValue(text = "", selection = TextRange(0))
         isVisibleState.value = false
     }
+    fun requestFocus() {
+        focusEpochState.value += 1
+    }
 }
 
 @Composable
@@ -39,5 +44,6 @@ fun rememberSearchState(initialText: String = ""): SearchState {
         mutableStateOf(TextFieldValue(text = initialText, selection = TextRange(initialText.length)))
     }
     val isVisible = rememberSaveable { mutableStateOf(initialText.isNotEmpty()) }
-    return remember { SearchState(textFieldValue, isVisible) }
+    val focusEpoch = remember { mutableStateOf(0) }
+    return remember { SearchState(textFieldValue, isVisible, focusEpoch) }
 }

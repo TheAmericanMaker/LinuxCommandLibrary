@@ -99,10 +99,12 @@ internal fun decodeTabStackEntry(s: String): TabStackEntry {
     val parts = s.split('|')
     return when (parts[0]) {
         "c" -> TabStackEntry.Command(parts[1])
+
         "b" -> TabStackEntry.BasicGroup(
             parts[1],
             parts.getOrNull(2)?.takeIf { it.isNotEmpty() }?.toLongOrNull(),
         )
+
         else -> error("invalid tab stack entry: $s")
     }
 }
@@ -219,8 +221,11 @@ fun LinuxApp(initialDeeplink: String? = null) {
                 } else {
                     commandsStack.add(TabStackEntry.Command(event.commandName))
                 }
+
                 isOnBasics -> basicsStack.add(TabStackEntry.Command(event.commandName))
+
                 isOnTips -> tipsStack.add(TabStackEntry.Command(event.commandName))
+
                 // currentRoute not yet resolved — race during init.
                 else -> {
                     pendingCommandSelection = event.commandName
@@ -243,12 +248,15 @@ fun LinuxApp(initialDeeplink: String? = null) {
                     } else {
                         basicsStack.add(TabStackEntry.BasicGroup(event.categoryId, event.expandGroupId))
                     }
+
                     isOnTips -> tipsStack.add(
                         TabStackEntry.BasicGroup(event.categoryId, event.expandGroupId),
                     )
+
                     isOnCommands -> commandsStack.add(
                         TabStackEntry.BasicGroup(event.categoryId, event.expandGroupId),
                     )
+
                     // currentRoute not yet resolved — race during init.
                     else -> {
                         pendingBasicSelection = event.categoryId
@@ -282,10 +290,36 @@ fun LinuxApp(initialDeeplink: String? = null) {
     ) {
         when {
             tipsStackBack -> tipsStack.removeAt(tipsStack.lastIndex)
-            basicsStackBack -> basicsStack.removeAt(basicsStack.lastIndex)
-            commandsStackBack -> commandsStack.removeAt(commandsStack.lastIndex)
-            basicsNavBack -> scope.launch { basicsNavigator.navigateBack(backBehavior) }
-            commandsNavBack -> scope.launch { commandsNavigator.navigateBack(backBehavior) }
+
+            basicsStackBack -> {
+                basicsStack.removeAt(basicsStack.lastIndex)
+                if (basicsStack.isEmpty() &&
+                    !basicsNavigator.canNavigateBack(backBehavior) &&
+                    searchState.searchText.isNotEmpty()
+                ) {
+                    searchState.requestFocus()
+                }
+            }
+
+            commandsStackBack -> {
+                commandsStack.removeAt(commandsStack.lastIndex)
+                if (commandsStack.isEmpty() &&
+                    !commandsNavigator.canNavigateBack(backBehavior) &&
+                    searchState.searchText.isNotEmpty()
+                ) {
+                    searchState.requestFocus()
+                }
+            }
+
+            basicsNavBack -> scope.launch {
+                basicsNavigator.navigateBack(backBehavior)
+                if (searchState.searchText.isNotEmpty()) searchState.requestFocus()
+            }
+
+            commandsNavBack -> scope.launch {
+                commandsNavigator.navigateBack(backBehavior)
+                if (searchState.searchText.isNotEmpty()) searchState.requestFocus()
+            }
         }
     }
 
@@ -507,6 +541,7 @@ internal fun TabStackEntryContent(
                 onBack = onBack,
                 onNavigate = onNavigate,
             )
+
             is TabStackEntry.BasicGroup -> BasicGroupDetailPane(
                 categoryId = entry.categoryId,
                 expandGroupId = entry.expandGroupId,

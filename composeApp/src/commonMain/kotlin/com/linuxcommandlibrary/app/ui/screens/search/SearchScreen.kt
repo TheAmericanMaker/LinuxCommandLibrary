@@ -18,9 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.linuxcommandlibrary.app.NavEvent
 import com.linuxcommandlibrary.app.data.BasicGroup
@@ -33,6 +36,7 @@ import com.linuxcommandlibrary.app.ui.composables.rememberIconPainter
 import com.linuxcommandlibrary.app.ui.composables.selectableListItemColors
 import com.linuxcommandlibrary.app.ui.screens.commandlist.CommandListItem
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchScreen(
     searchText: String,
@@ -42,15 +46,23 @@ fun SearchScreen(
     selectedBasicGroupId: Long? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(searchText) {
         viewModel.search(searchText)
     }
 
+    val dismissKeyboardAndNavigate: (NavEvent) -> Unit = { event ->
+        keyboardController?.hide()
+        focusManager.clearFocus()
+        onNavigate(event)
+    }
+
     SearchContent(
         uiState = uiState,
         searchText = searchText,
-        onNavigate = onNavigate,
+        onNavigate = dismissKeyboardAndNavigate,
         selectedCommandName = selectedCommandName,
         selectedBasicGroupId = selectedBasicGroupId,
     )
