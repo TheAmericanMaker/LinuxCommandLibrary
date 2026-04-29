@@ -107,9 +107,9 @@ private fun CommandSectionColumn(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .pointerHoverIcon(PointerIcon.Hand)
+            .pointerHoverIcon(PointerIcon.Hand, overrideDescendants = true)
             .clickable { onToggleExpanded(section.id) }
-            .padding(start = 24.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+            .padding(start = 24.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
