@@ -638,6 +638,7 @@ bcrypt.md
 bd.md
 bdfr.md
 bdftopcf.md
+beacon.md
 beakerlib.md
 beanstalkd.md
 bear.md
@@ -6480,6 +6481,7 @@ rnm.md
 robo.md
 robotfindskitten.md
 robots.md
+rocky.md
 rofi.md
 rogue.md
 roll.md
