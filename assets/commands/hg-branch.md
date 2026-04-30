@@ -42,5 +42,5 @@ manages named branches in Mercurial
 
 # SEE ALSO
 
-[hg](/man/hg)(1), [hg-update](/man/hg-update)(1), [hg-bookmark](/man/hg-bookmark)(1)
+[hg](/man/hg)(1), [hg-update](/man/hg-update)(1), [hg-commit](/man/hg-commit)(1)
 

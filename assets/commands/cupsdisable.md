@@ -18,27 +18,37 @@ stop printer from processing jobs
 
 # SYNOPSIS
 
-**cupsdisable** [_options_] _destination(s)_
+**cupsdisable** [**-E**] [**-U** _user_] [**-c**] [**-h** _server_[:_port_]] [**-r** _reason_] [**--hold**] _destination_...
 
 # PARAMETERS
 
 **-c**
-> Cancel all jobs on the destination.
+> Cancel all jobs queued on the destination after disabling it.
 
 **-r** _reason_
-> Set reason message.
+> Reason message attached to the stopped state and reported by **lpstat**.
 
-**-h** _server[:port]_
-> Connect to specific server.
+**-E**
+> Force encryption of the connection to the CUPS server.
+
+**-U** _user_
+> Authenticate as _user_ instead of the current login.
+
+**-h** _server_[:_port_]
+> Connect to a specific CUPS server (default: $CUPS_SERVER, then localhost:631).
 
 **--hold**
-> Hold remaining jobs.
+> Hold all remaining queued jobs once the current one finishes — useful for performing maintenance after the in-flight job completes.
 
 # DESCRIPTION
 
-**cupsdisable** stops the printing system from processing jobs for the specified destinations. Jobs are held in the queue until the printer is enabled again.
+**cupsdisable** stops a CUPS printer or class from processing further jobs. By default, the in-progress job continues to print but new jobs queue up until the destination is re-enabled with **cupsenable**. With **-c**, all jobs are cancelled; with **--hold**, the current job finishes and remaining jobs are placed on hold (release them later with **cupsenable --release**).
 
-Requires administrator privileges.
+Requires CUPS administrator privileges (member of the **lpadmin** group or root).
+
+# CAVEATS
+
+In CUPS 1.5+ the same binary is also installed as **cupsdisable** for backwards compatibility with the historical Berkeley **disable** command — in fact the canonical name is **cupsdisable**. Some distributions ship it only under that name.
 
 # SEE ALSO
 

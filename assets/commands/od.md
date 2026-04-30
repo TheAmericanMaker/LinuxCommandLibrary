@@ -52,16 +52,34 @@ _FILE_
 > Output type (a, c, d, f, o, u, x with optional size suffix)
 
 **-a**
-> Named characters, same as -t a
+> Named characters, same as **-t a** (ignores high-order bit).
 
 **-b**
-> Octal bytes, same as -t o1
+> Octal bytes, same as **-t o1**.
 
 **-c**
-> ASCII characters or backslash escapes, same as -t c
+> Printable characters or backslash escapes, same as **-t c**.
+
+**-d**
+> Unsigned decimal, two-byte units, same as **-t u2**.
+
+**-f**
+> Floating point, same as **-t fF**.
+
+**-i**
+> Decimal int (sizeof(int)), same as **-t dI**.
+
+**-l**
+> Decimal long, same as **-t dL**.
+
+**-o**
+> Octal, two-byte units, same as **-t o2**.
+
+**-s**
+> Decimal, two-byte units, same as **-t d2**.
 
 **-x**
-> Two-byte hexadecimal, same as -t x2
+> Hexadecimal, two-byte units, same as **-t x2**.
 
 **-j** _BYTES_, **--skip-bytes**=_BYTES_
 > Skip BYTES input bytes first

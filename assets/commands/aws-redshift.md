@@ -106,7 +106,7 @@ Redshift Serverless provides a pay-per-use option without managing clusters. Dat
 
 # CAVEATS
 
-Cluster creation takes several minutes. Classic resize creates a new cluster and migrates data; elastic resize is faster but has limitations. Paused clusters still incur storage costs. Multi-node clusters require minimum of 2 nodes. Master password must meet complexity requirements. Public access requires proper security group and VPC settings.
+Cluster creation takes several minutes. Classic resize creates a new cluster and migrates data; elastic resize is faster but has limitations. **pause-cluster** / **resume-cluster** only work on **RA3** node types (DC2 clusters cannot be paused). Paused clusters still incur backup-storage costs. Multi-node clusters require a minimum of 2 nodes. Master passwords must meet complexity requirements. Public access requires proper security group and VPC settings.
 
 # HISTORY
 

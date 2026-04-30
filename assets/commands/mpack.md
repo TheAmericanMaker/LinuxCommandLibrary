@@ -4,65 +4,68 @@ encodes files into MIME format for email transmission
 
 # TLDR
 
-**Encode file as MIME**
+**Encode file as a MIME message** to a file
 
 ```mpack -o [output.mime] [file]```
 
-**Encode and mail**
+**Encode and mail** the file to one or more recipients
 
 ```mpack -s "[Subject]" [file] [user@example.com]```
 
-**Encode to stdout**
+**Encode to stdout** for piping into another mailer
 
 ```mpack -o - [file]```
 
-**Split large file**
+**Fragment a large file** into multiple messages of at most 100 000 chars each
 
-```mpack -s "[Subject]" -c [100000] [large_file] [user@example.com]```
+```mpack -s "[Subject]" -m [100000] [large_file] [user@example.com]```
+
+**Force a specific MIME content type**
+
+```mpack -c application/pdf [report.pdf] [user@example.com]```
+
+**Post the file to a Usenet newsgroup** instead of e-mail
+
+```mpack -n [comp.misc] [file]```
 
 # SYNOPSIS
 
-**mpack** [_options_] _file_ [_address_...]
+**mpack** [**-a**] [**-s** _subject_] [**-d** _descriptionfile_] [**-m** _maxsize_] [**-c** _content-type_] _file_ _address_...
+
+**mpack** [**-a**] [**-s** _subject_] [**-d** _descriptionfile_] [**-m** _maxsize_] [**-c** _content-type_] **-o** _outputfile_ _file_
+
+**mpack** [**-a**] [**-s** _subject_] [**-d** _descriptionfile_] [**-m** _maxsize_] [**-c** _content-type_] **-n** _newsgroups_ _file_
 
 # PARAMETERS
 
 **-s** _subject_
-> Email subject.
+> Email subject line.
 
-**-d** _description_
-> Content description.
+**-d** _descriptionfile_
+> Include the contents of _descriptionfile_ as an introductory text part before the attachment.
 
-**-c** _size_
-> Split size in bytes.
+**-m** _maxsize_
+> Fragment the message into chunks no larger than _maxsize_ characters (0 = no limit).
 
-**-o** _file_
-> Output file (or - for stdout).
+**-c** _content-type_
+> Override the MIME **Content-Type** of the attachment (e.g. **application/pdf**, **image/png**).
 
-**-m** _type_
-> MIME content type.
+**-a**
+> Mark the encoded file as an **attachment** (Content-Disposition: attachment) rather than inline.
+
+**-o** _outputfile_
+> Write the encoded message to _outputfile_ (use **-** for stdout). When fragmenting, numbered suffixes are appended.
+
+**-n** _newsgroups_
+> Post to the named Usenet newsgroup(s) instead of mailing.
 
 # DESCRIPTION
 
-**mpack** encodes files into MIME format for email transmission. It handles binary files by encoding them as base64 and generating proper MIME headers.
-
-mpack can send encoded files directly via email or save them to files for later transmission.
-
-# EXAMPLE
-
-```bash
-# Encode and email PDF
-mpack -s "Report" report.pdf user@example.com
-
-# Encode to file
-mpack -o report.mime report.pdf
-
-# Split large file
-mpack -s "Large File" -c 1000000 bigfile.zip user@example.com
-```
+**mpack** encodes a binary or text file into one or more MIME-formatted messages, optionally mailing them to a list of addresses or posting them to a newsgroup. It generates the necessary headers (**MIME-Version**, **Content-Type**, **Content-Transfer-Encoding**, **Content-Disposition**) and base64-encodes binary content. With **-m**, the message is split into independently mailable fragments that **munpack** can reassemble at the other end.
 
 # CAVEATS
 
-Companion to munpack. May require configured mail system. Large files should be split. Some encodings deprecated.
+Companion to **munpack**. Sending mail or posting requires a configured local MTA (sendmail-compatible) or news transport. Fragmented messages must all reach the recipient and be reassembled with **munpack** before decoding.
 
 # HISTORY
 

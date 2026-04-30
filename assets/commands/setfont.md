@@ -34,44 +34,47 @@ Set font for a **specific console**
 
 # PARAMETERS
 
-**-d, --double**
-> Double the font size for high-density displays
+**-d**, **--double**
+> Double the font size for high-density displays.
 
 **-h** _N_, **--font-height** _N_
-> Override font height (useful for partial fonts)
+> Override font height (useful for partial fonts).
 
-**-o** _file_
-> Save previous font to the specified file
+**-N**, **--default8x**=_N_
+> Load the built-in default font of width _N_ (8xN).
 
-**-O** _file_
-> Save previous font and Unicode map together
+**-o** _file_, **--output-font**=_file_
+> Save the previous font to _file_ before loading the new one.
 
-**-om** _file_
-> Store current console mapping table
+**-O** _file_, **--output-fullfont**=_file_
+> Save the previous font together with its Unicode map to _file_.
 
-**-ou** _file_
-> Save current Unicode mapping to file
+**-om** _file_, **--output-consolemap**=_file_
+> Save the current console mapping table to _file_.
 
-**-m** _file_, **--consolemap** _file_
-> Load console map or Unicode console map
+**-ou** _file_, **--output-unicodemap**=_file_
+> Save the current Unicode mapping table to _file_.
 
-**-u** _file_, **--unicodemap** _file_
-> Load Unicode mapping table for the font
+**-m** _file_, **--consolemap**=_file_
+> Load console map or Unicode console map from _file_.
 
-**-C** _device_, **--console** _device_
-> Set font on the specified console device
+**-u** _file_, **--unicodemap**=_file_
+> Load the Unicode mapping table that describes the font.
 
-**-f, --force**
-> Force loading Unicode map even if empty
+**-C** _device_, **--console**=_device_
+> Set the font on the specified console device.
 
-**-R, --reset**
-> Restore console to bootup defaults
+**-f**, **--force**
+> Force-load the Unicode map even if it is empty.
 
-**-v, --verbose**
-> Enable verbose output
+**-R**, **--reset**
+> Restore the console font, size, and Unicode mapping to boot-up defaults.
 
-**-V, --version**
-> Print version information
+**-v**, **--verbose**
+> Enable verbose output.
+
+**-V**, **--version**
+> Print version and exit.
 
 # DESCRIPTION
 

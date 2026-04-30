@@ -24,53 +24,87 @@ Suspend to **disk** and wake in 15 minutes
 
 ```sudo rtcwake -m disable```
 
-**Dry run** at specific time
+**Dry run** without actually suspending
 
-```sudo rtcwake -m on --date [hh:mm]```
+```sudo rtcwake -m mem -s 600 -n```
+
+**List supported wake modes** for this kernel
+
+```rtcwake --list-modes```
 
 # SYNOPSIS
 
-**rtcwake** [**-m** _mode_] [**-s** _seconds_|**--date** _time_] [_options_]
+**rtcwake** [_options_] [**-d** _device_] [**-m** _mode_] {**-s** _seconds_ | **-t** _time_t_ | **--date** _timestamp_}
 
 # MODES
 
+**standby**
+> ACPI S1 — minimal but real power savings. Default mode if **-m** is omitted.
+
 **mem**
-> Suspend to RAM (S3)
+> Suspend to RAM (ACPI S3).
 
 **disk**
-> Suspend to disk/hibernate (S4)
+> Suspend to disk / hibernate (ACPI S4).
 
 **freeze**
-> Suspend-to-idle (S0ix, kernel 3.9+)
+> Suspend-to-idle (S0ix), kernel 3.9+.
 
 **off**
-> Power off system
+> Power off the system (ACPI S5).
+
+**no**
+> Set the RTC alarm but do not suspend or shut down.
 
 **on**
-> No sleep, just set wakeup time
+> Do not sleep; instead poll the RTC until the alarm fires (debugging).
 
 **show**
-> Display current alarm
+> Display the currently set alarm.
 
 **disable**
-> Cancel pending alarm
+> Cancel a pending alarm.
 
 # PARAMETERS
 
-**-m, --mode _mode_**
-> Sleep/action mode
+**-m**, **--mode** _mode_
+> Sleep / action mode (see **MODES**).
 
-**-s, --seconds _sec_**
-> Wake after N seconds
+**-s**, **--seconds** _sec_
+> Wake _sec_ seconds from now.
 
-**--date _time_**
-> Wake at specific time
+**-t**, **--time** _time_t_
+> Wake at the absolute Unix epoch time _time_t_.
 
-**-v, --verbose**
-> Verbose output
+**--date** _timestamp_
+> Wake at the given timestamp (e.g. `+5min`, `2026-04-30 18:00`, `tomorrow 03:00`).
 
-**-d, --device _rtc_**
-> Use specific RTC device
+**-d**, **--device** _rtc_
+> Use the specified RTC device (default **/dev/rtc0**).
+
+**-l**, **--local**
+> Treat the hardware clock as local time.
+
+**-u**, **--utc**
+> Treat the hardware clock as UTC.
+
+**-a**, **--auto**
+> Read the clock interpretation from **/etc/adjtime** (default).
+
+**-A**, **--adjfile** _file_
+> Use _file_ instead of **/etc/adjtime**.
+
+**-n**, **--dry-run**
+> Test mode — set up the alarm but do not actually suspend or shut down.
+
+**--list-modes**
+> Print modes the running kernel supports.
+
+**-v**, **--verbose**
+> Verbose output.
+
+**-V**, **--version**
+> Print version and exit.
 
 # DESCRIPTION
 

@@ -23,27 +23,23 @@ opens a subshell in a package directory
 # PARAMETERS
 
 _PACKAGE_
-> Package to explore.
+> Installed package to enter (looked up in **node_modules**).
 
 _COMMAND_
-> Command to run in package dir.
+> Command to run in the package directory. When supplied, the subshell exits as soon as the command finishes.
 
-**--help**
-> Display help information.
+**--shell** _PATH_
+> Shell to invoke. Default: **$SHELL**, or **bash** on POSIX, or **cmd.exe** on Windows.
 
 # DESCRIPTION
 
-**npm explore** opens a subshell in a package directory. Allows inspection of installed packages.
+**npm explore** spawns a subshell inside the directory of an installed package (typically under **node_modules**). It is useful for inspecting an installed package, manipulating git submodules within it, or running ad-hoc commands such as **npm run** scripts in the package context.
 
-The command changes to node_modules/package. Can run commands within package.
+If you modify the package while exploring, the package is **not** rebuilt automatically — run **npm rebuild** _pkg_ afterwards to recompile native components and re-link binaries.
 
 # CAVEATS
 
-Opens subshell. Exit to return. Use carefully with commands.
-
-# HISTORY
-
-npm explore provides **direct access** to installed package directories for debugging.
+Opens an interactive subshell — type **exit** to return to the parent shell. Edits made under **node_modules** are wiped on the next **npm install**, so persist changes upstream when possible. Using **--** before the command is recommended so npm does not interpret the trailing arguments as its own flags.
 
 # SEE ALSO
 

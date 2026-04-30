@@ -35,8 +35,11 @@ _url_
 **-n**, **--no-plugins**
 > Don't load plugins.
 
-**--minimize** _level_
-> Start minimized (0-2).
+**--minimize**=_level_
+> Start window minimized: **0** = none, **1** = window minimized, **2** = tray-only.
+
+**-a**, **--no-auto**
+> Don't auto-connect to any servers on startup.
 
 **-e**, **--existing**
 > Open in existing instance.
@@ -73,4 +76,4 @@ HexChat was forked from **XChat** in **2009** when XChat's Windows builds became
 
 # SEE ALSO
 
-[irssi](/man/irssi)(1), [weechat](/man/weechat)(1), [xchat](/man/xchat)(1)
+[irssi](/man/irssi)(1), [weechat](/man/weechat)(1)

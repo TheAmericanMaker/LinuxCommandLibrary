@@ -26,33 +26,48 @@ List references in the local repository
 
 # SYNOPSIS
 
-**git show-ref** [_options_] [_pattern_]
+**git show-ref** [**--head**] [**-d** | **--dereference**] [**-s** | **--hash**[=_N_]] [**--abbrev**[=_N_]] [**--branches**] [**--tags**] [--] [_pattern_...]
+
+**git show-ref** **--verify** [**-q** | **--quiet**] [**-d** | **--dereference**] [**-s** | **--hash**[=_N_]] [**--abbrev**[=_N_]] [--] [_ref_...]
+
+**git show-ref** **--exists** _ref_
+
+**git show-ref** **--exclude-existing**[=_pattern_]
 
 # PARAMETERS
 
 _PATTERN_
-> Filter refs by pattern.
+> Match refs whose end matches the pattern (matched in complete parts).
 
-**--heads**
-> Show only heads.
+**--head**
+> Include the HEAD reference, which is filtered out by default.
+
+**--branches**
+> Limit to local branches (refs/heads). Replaces the older **--heads**, which still works as an alias.
 
 **--tags**
-> Show only tags.
+> Limit to local tags (refs/tags).
 
 **--verify**
-> Verify ref exists.
+> Require the argument to be an exact ref path (e.g. refs/heads/main). Errors if the ref does not exist.
+
+**--exists** _ref_
+> Check whether a ref exists. Exit code 0 = exists, 2 = missing, 1 = error.
+
+**--exclude-existing**[=_pattern_]
+> Filter mode. Reads refs from stdin and prints those that do not exist locally, optionally limited to refs matching the pattern suffix.
 
 **-q**, **--quiet**
-> No output, exit code only.
+> Suppress output. Use the exit code only.
 
-**--hash**
-> Show hash only.
+**-s**, **--hash**[=_N_]
+> Print only the object name (optionally abbreviated to _N_ hex digits), not the ref name.
+
+**--abbrev**[=_N_]
+> Abbreviate the printed object name to _N_ hex digits (default uses **core.abbrev**).
 
 **-d**, **--dereference**
-> Dereference tags.
-
-**--help**
-> Display help information.
+> For tag objects, also print the dereferenced commit, suffixed with **^{}**.
 
 # DESCRIPTION
 

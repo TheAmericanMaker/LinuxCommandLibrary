@@ -32,17 +32,19 @@ Units with `IgnoreOnIsolate=yes` are not stopped during isolation. The `.target`
 
 # COMMON TARGETS
 
-**graphical.target** - Full GUI environment
+**graphical.target** — Full GUI environment (replaces SysV runlevel 5).
 
-**multi-user.target** - Text-mode multi-user
+**multi-user.target** — Text-mode multi-user (runlevel 3).
 
-**rescue.target** - Single-user rescue mode
+**rescue.target** — Single-user rescue mode (runlevel 1) with most filesystems mounted.
 
-**emergency.target** - Minimal emergency shell
+**emergency.target** — Minimal emergency shell with only the root filesystem mounted read-only.
+
+**reboot.target**, **poweroff.target**, **halt.target** — Transitional targets that cleanly bring the system to the matching state.
 
 # CAVEATS
 
-Only units marked as isolatable can be targets. This is a disruptive operation that stops most running services. Essential services (with IgnoreOnIsolate=yes) continue running.
+Only units that have **AllowIsolate=yes** can be isolated to. This is a disruptive operation that stops every running unit not required by the new target except those declaring **IgnoreOnIsolate=yes**. Requires root privileges. To make a target the default at boot, use **systemctl set-default** instead.
 
 # HISTORY
 

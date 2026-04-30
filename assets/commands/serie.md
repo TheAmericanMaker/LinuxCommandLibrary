@@ -30,7 +30,7 @@ Rich git commit graph in your terminal
 > Maximum number of commits to render.
 
 **-p**, **--protocol** _TYPE_
-> Image protocol: auto, iterm, or kitty. Default: auto.
+> Image protocol: auto, iterm, kitty, or kitty-unicode. Default: auto.
 
 **-o**, **--order** _TYPE_
 > Commit ordering: chrono or topo. Default: chrono.
@@ -41,13 +41,27 @@ Rich git commit graph in your terminal
 **-s**, **--graph-style** _TYPE_
 > Edge style: rounded or angular.
 
+**-i**, **--initial-selection** _TYPE_
+> Commit selected on startup: latest or head.
+
+**-h**, **--help**
+> Show help text and exit.
+
+**-V**, **--version**
+> Print version and exit.
+
+# CONFIGURATION
+
+**$SERIE_CONFIG_FILE**
+> Path to a TOML configuration file. Falls back to **$XDG_CONFIG_HOME/serie/config.toml** when unset.
+
 # DESCRIPTION
 
-**serie** renders rich git commit graphs directly in the terminal using image display protocols (iTerm2 or Kitty). It provides a visual alternative to **git log --graph --all** with customizable graph styles, commit ordering, and interactive browsing.
+**serie** renders rich git commit graphs directly in the terminal using terminal image protocols (iTerm2 inline images or Kitty graphics). It provides a visual alternative to **git log --graph --all** with customizable graph styles, commit ordering, and interactive browsing. Press **?** inside the TUI to view the keybinding cheat sheet.
 
 # CAVEATS
 
-Requires iTerm2 or Kitty terminal emulator with image protocol support. Does not support Sixel graphics or terminal multiplexers (tmux, screen, Zellij).
+Requires a terminal that supports the iTerm2 inline images protocol or the Kitty graphics protocol. Sixel graphics are not supported, and rendering does not work reliably inside terminal multiplexers (tmux, screen, Zellij) that strip image escape sequences.
 
 # HISTORY
 

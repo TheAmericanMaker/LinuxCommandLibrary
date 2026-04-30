@@ -8,9 +8,9 @@ Run PPPoE access concentrator server
 
 ```pppoe-server -I [eth0]```
 
-**Specify IP pool**
+**Specify local IP and starting remote IP** (allocate up to N consecutive addresses)
 
-```pppoe-server -I [eth0] -L [10.0.0.1] -R [10.0.0.100-200]```
+```pppoe-server -I [eth0] -L [10.0.0.1] -R [10.0.0.100] -N [100]```
 
 **Run with specific service name**
 
@@ -23,33 +23,81 @@ Run PPPoE access concentrator server
 # PARAMETERS
 
 **-I** _INTERFACE_
-> Listening interface.
+> Ethernet interface to listen on. Repeatable to serve multiple interfaces.
 
 **-L** _IP_
-> Local IP address.
+> Local (server-side) IP address (default **10.0.0.1**).
 
-**-R** _RANGE_
-> Remote IP range.
+**-R** _IP_
+> Remote IP pool starting address (default **10.67.15.1**); each session gets the next address.
+
+**-p** _FILE_
+> Read the remote IP pool from a text file (one address per line).
 
 **-S** _NAME_
-> Service name.
+> Advertised service name. Repeatable to advertise multiple services.
+
+**-C** _AC_NAME_
+> Access-concentrator name announced in PADO replies (default: hostname).
 
 **-N** _NUM_
-> Max sessions.
+> Maximum concurrent sessions (default **64**).
+
+**-x** _N_
+> Limit concurrent sessions from a single peer MAC.
+
+**-O** _FILE_
+> Path to a **pppd** options file used for every spawned session.
+
+**-T** _SECONDS_
+> Idle timeout passed through to **pppoe**.
+
+**-m** _MSS_
+> Clamp the negotiated TCP MSS to _MSS_.
+
+**-D**
+> Delegate IP address assignment to **pppd** (do not allocate from the local pool).
+
+**-k**
+> Use the in-kernel PPPoE driver (Linux 2.4+).
+
+**-F**
+> Run in the foreground rather than daemonising.
+
+**-X** _PIDFILE_
+> Write the daemon PID to _PIDFILE_ with locking.
+
+**-q** _PATH_
+> Path to the **pppd** binary.
+
+**-Q** _PATH_
+> Path to the user-space **pppoe** binary.
+
+**-u**
+> Invoke **pppd** with the **unit** option for predictable interface naming.
+
+**-i**
+> Silently drop PADI broadcasts when no session slots remain.
+
+**-r**
+> Randomise PPPoE session IDs.
+
+**-h**
+> Print usage and exit.
 
 # DESCRIPTION
 
-**pppoe-server** implements a PPPoE access concentrator that accepts incoming PPPoE client connections on a specified network interface. It assigns IP addresses from a configured pool and spawns pppd instances to handle each client session.
+**pppoe-server** implements a PPPoE access concentrator that accepts incoming PPPoE client (PADI/PADR) frames on a specified Ethernet interface. For each accepted session it spawns a **pppd** instance plumbed to the user-space **pppoe** plugin (or the in-kernel driver with **-k**) and assigns a remote IP from the local pool unless **-D** delegates that to **pppd**.
 
-This is used by ISPs and in lab environments to provide PPPoE-based broadband service. Parameters control the listening interface, local and remote IP address ranges, maximum concurrent sessions, and the advertised service name.
+Typical deployments run **pppoe-server** as part of a small lab DSL/PPPoE setup; ISPs more commonly use it as the front end to a RADIUS-backed AAA stack via **pppd**'s **radius** plugin.
 
 # CAVEATS
 
-Requires proper configuration. Usually combined with RADIUS.
+The Ethernet interface used by **pppoe-server** typically must be brought up without an IP, since PPPoE works at layer 2. Combine with a RADIUS plugin in **pppd** for real authentication; the built-in pool assignment is meant for simple/lab use. The default session cap (**-N 64**) is the absolute maximum per interface for **rp-pppoe** unless raised.
 
 # HISTORY
 
-pppoe-server provides **PPPoE access concentrator** functionality.
+**pppoe-server** is part of **rp-pppoe** by **Roaring Penguin Software** (originally written by **Dianne Skoll**), the canonical user-space PPPoE implementation on Linux and \*BSD.
 
 # SEE ALSO
 

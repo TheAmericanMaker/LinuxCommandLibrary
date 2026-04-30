@@ -21,9 +21,9 @@ The tool is useful when bzip2 files become corrupted and normal decompression fa
 # OPERATION
 
 The tool:
-1. Scans the damaged .bz2 file for valid block boundaries
-2. Extracts each intact block to separate files (rec00001.bz2, rec00002.bz2, etc.)
-3. Each recovered file can be decompressed independently
+1. Scans the damaged **.bz2** file for valid block boundaries.
+2. Writes each intact block to a separate file named **rec0000N**_input_**.bz2** (e.g. **rec00001damaged.bz2**, **rec00002damaged.bz2**).
+3. Each recovered single-block file can then be decompressed independently with **bunzip2**.
 
 # WORKFLOW
 
@@ -31,25 +31,25 @@ The tool:
 # Attempt recovery
 bzip2recover damaged.bz2
 
-# This creates: rec00001damaged.bz2, rec00002damaged.bz2, etc.
+# Creates: rec00001damaged.bz2, rec00002damaged.bz2, ...
 
-# Decompress recovered blocks
+# Decompress each recovered block
 bunzip2 rec*damaged.bz2
 
-# Manually combine recovered data if needed
+# Concatenate the decompressed blocks in order
 cat rec*damaged > recovered.txt
 ```
 
 # FEATURES
 
 - Block-level recovery
-- No modification of original file
-- Works with partially corrupted files
-- Creates separate files per block
+- Does not modify the original file
+- Works on partially corrupted files
+- Produces one **.bz2** file per intact block
 
 # CAVEATS
 
-Cannot recover completely destroyed data. Recovery depends on block boundaries being intact. May only recover partial file. Recovered blocks need manual combination. Not guaranteed to work. Prevention (backups) better than recovery.
+Cannot recover data inside a corrupted block — only whole blocks bounded by intact 48-bit block-start/end markers are saved. The first block is often unrecoverable because its leading bits sit in the file header. Effective only on files compressed with a block size larger than the default (recovery requires multiple blocks). Recovered blocks must be decompressed and concatenated manually. Backups are far more reliable than recovery.
 
 # HISTORY
 

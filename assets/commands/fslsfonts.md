@@ -34,22 +34,31 @@ _PATTERN_
 > Font pattern to match.
 
 **-fn** _PATTERN_
-> Font name pattern (XLFD).
+> XLFD pattern of fonts to list (defaults to **\***).
 
 **-l**
-> Long listing with details.
+> Long listing — show font properties. Repeat as **-ll** or **-lll** for progressively more detail.
+
+**-m**
+> Include minimum and maximum character bounds in long listings.
 
 **-C**
 > Multi-column output.
 
-**-server** _HOST:PORT_
-> Font server to query.
-
 **-1**
-> One font per line.
+> Single-column output (one font per line).
 
-**--help**
-> Display help information.
+**-w** _WIDTH_
+> Set the column width used by **-C** (default 79).
+
+**-n** _COLUMNS_
+> Force the output to use _COLUMNS_ columns (implies **-C**).
+
+**-u**
+> Leave the output unsorted.
+
+**-server** _HOST:PORT_
+> Query the named font server (e.g. **tcp/host:7100**, **unix/:7100**) instead of the **FONTSERVER** environment variable.
 
 # DESCRIPTION
 

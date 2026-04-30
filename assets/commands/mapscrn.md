@@ -4,58 +4,65 @@ loads output character translation maps
 
 # TLDR
 
-**Load screen map**
+**Load a screen mapping table**
 
 ```mapscrn [mapfile]```
 
-**Load from default directory**
+**Load from the standard map directory** (resolved under /usr/{share,lib}/kbd/consoletrans)
 
-```mapscrn [trivstrk.trans]```
+```mapscrn [trivial]```
 
-**Show current map**
+**Save the current mapping table** to a file before loading a new one
 
-```mapscrn -o```
+```mapscrn -o [old-map.bin] [new-map]```
 
-**Clear screen map**
+**Reset to the trivial (identity) map**
 
-```mapscrn -c```
+```mapscrn trivial```
+
+**Apply the map on a specific console**
+
+```mapscrn -C /dev/tty3 [mapfile]```
 
 # SYNOPSIS
 
-**mapscrn** [_options_] [_mapfile_]
+**mapscrn** [_options_] _mapfile_
 
 # PARAMETERS
 
 _MAPFILE_
-> Screen map file.
+> Screen mapping table to load. Either an absolute path or a name resolved under the kbd consoletrans directory (e.g. **/usr/share/kbd/consoletrans/**). Files may be 256-byte binary, 512-byte (Unicode) binary, or a textual mapping.
 
-**-o**
-> Output current map.
+**-o** _FILE_, **--output**=_FILE_
+> Save the previous mapping table to _FILE_ before loading the new one.
 
-**-c**
-> Clear (set default) map.
+**-C** _DEV_, **--console**=_DEV_
+> Apply the change to the named console device (default: current TTY).
 
-**-V**
-> Show version.
+**-v**, **--verbose**
+> Verbose output.
 
-**--help**
-> Display help information.
+**-V**, **--version**
+> Print version and exit.
+
+**-h**, **--help**
+> Print usage and exit.
 
 # DESCRIPTION
 
-**mapscrn** loads output character translation maps. It sets up screen character mapping for consoles.
+**mapscrn** loads a screen output character mapping table for the Linux text console. The table tells the kernel how to translate the bytes written to **/dev/tty**_n_ into glyph indices in the currently loaded console font. Together with **loadkeys** (input mapping) and **setfont** (glyphs), it controls the legacy 8-bit console pipeline.
 
-The tool handles character set translation for virtual terminals. Used for non-ASCII display.
+To return to the identity mapping, load the **trivial** table (e.g. **mapscrn trivial**); there is no dedicated "clear" flag.
 
 # CAVEATS
 
-Linux console specific. UTF-8 makes this less necessary. Part of kbd package.
+The functionality of **mapscrn** is now built into **setfont** — modern kbd installations keep **mapscrn** only for backwards compatibility. The command applies only to Linux text VTs (not to terminal emulators or framebuffer terminals such as **fbterm**). On UTF-8 consoles it is rarely needed; load a Unicode map (**-u** to **setfont**) instead. Requires sufficient privileges to write to the console.
 
 # HISTORY
 
-mapscrn is part of the **kbd** package for Linux console configuration.
+**mapscrn** is part of the **kbd** package, the standard Linux console keyboard and character utilities maintained by Alexey Gladkov and others.
 
 # SEE ALSO
 
-[setfont](/man/setfont)(8), [loadkeys](/man/loadkeys)(1), [consoletype](/man/consoletype)(1)
+[setfont](/man/setfont)(8), [loadkeys](/man/loadkeys)(1), [showconsolefont](/man/showconsolefont)(8)
 
