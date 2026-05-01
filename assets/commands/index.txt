@@ -400,6 +400,7 @@ authconfig.md
 authelia.md
 authselect.md
 auto-cpufreq.md
+auto-round.md
 autoconf.md
 autoexpect.md
 autoflake.md
@@ -1440,6 +1441,7 @@ ctrlaltdel.md
 ctx.md
 ctypes.md
 cu.md
+cuabot.md
 cubemastercli.md
 cucumber.md
 cuda-gdb.md
@@ -2743,6 +2745,7 @@ git.md
 gita.md
 gitbook.md
 gitea.md
+gitgres.md
 github-copilot-cli.md
 github-label-sync.md
 gitk.md
@@ -3659,6 +3662,7 @@ kalker.md
 kanban-tui.md
 kanha.md
 kaniko.md
+kanwas.md
 kaskade.md
 kat.md
 katana.md
@@ -4036,6 +4040,7 @@ lolcat.md
 look.md
 lookandfeeltool.md
 lookbib.md
+loopsy.md
 lorder.md
 lorem.md
 losetup.md
@@ -6267,6 +6272,7 @@ quickget.md
 quicklisp.md
 quilt.md
 quiz.md
+qumulator.md
 quota.md
 quotacheck.md
 quotaon.md
@@ -8047,6 +8053,7 @@ whiptail.md
 whisper.md
 who.md
 whoami.md
+whohas.md
 whois.md
 whosthere.md
 wifi-menu.md
