@@ -1,3 +1,14 @@
+## v4.0.2 — 2026-05-01
+
+### Features
+- Added new Linux commands across multiple batches (AI agents, dev tools, infra utilities)
+- Added 10 commands to the AI tools basics category (dirac, vtcode, wuphf, auto-round, cuabot, kanwas, yourmemory, llmcat, memweave, agentbox)
+
+### Improvements
+- Tablet and desktop two-pane layouts now auto-select the first item so the detail pane shows real content instead of an empty placeholder
+- Unified styling between basic categories and groups (consistent row layout, matching icon tint, neutral chevron color)
+- Refined command documentation across many entries
+
 ## v4.0.1 — 2026-04-29
 
 ### Features

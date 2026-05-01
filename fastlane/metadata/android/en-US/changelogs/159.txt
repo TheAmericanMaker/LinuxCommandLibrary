@@ -1,0 +1,5 @@
+Add new Linux commands
+Add 10 AI tools to the AI basics category
+Two-pane tablet layout now auto-selects the first item
+Unified styling between basic categories and groups
+Refine command documentation
