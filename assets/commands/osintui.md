@@ -33,4 +33,4 @@ Requires valid API keys for each service you want to use. Free API tiers have ra
 
 # SEE ALSO
 
-[shodan](/man/shodan)(1), [nmap](/man/nmap)(1)
+[nmap](/man/nmap)(1), [theHarvester](/man/theHarvester)(1)

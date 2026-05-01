@@ -170,4 +170,4 @@ Environment variables **GRAFANA_SERVER**, **GRAFANA_TOKEN**, and **GRAFANA_CLOUD
 
 # SEE ALSO
 
-[grafana-cli](/man/grafana-cli)(1), [promtool](/man/promtool)(1), [logcli](/man/logcli)(1), [k6](/man/k6)(1)
+[grafana-cli](/man/grafana-cli)(1), [promtool](/man/promtool)(1), [k6](/man/k6)(1)

@@ -74,4 +74,4 @@ kdeconnect-cli is part of **KDE Connect**, enabling seamless integration between
 
 # SEE ALSO
 
-[kdeconnect-indicator](/man/kdeconnect-indicator)(1), [gsconnect](/man/gsconnect)(1)
+[adb-connect](/man/adb-connect)(1), [nmcli-connection](/man/nmcli-connection)(1)

@@ -74,4 +74,4 @@ gdc was developed to bring the D programming language to GCC, providing an alter
 
 # SEE ALSO
 
-[gcc](/man/gcc)(1), [dmd](/man/dmd)(1), [ldc2](/man/ldc2)(1)
+[gcc](/man/gcc)(1), [dmd](/man/dmd)(1), [ldc](/man/ldc)(1), [dub](/man/dub)(1)

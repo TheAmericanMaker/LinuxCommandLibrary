@@ -105,4 +105,4 @@ Recently finished jobs disappear from bjobs after a configurable time (typically
 
 # SEE ALSO
 
-[bsub](/man/bsub)(1), [bkill](/man/bkill)(1), [bhist](/man/bhist)(1), [bqueues](/man/bqueues)(1)
+[bsub](/man/bsub)(1), [bkill](/man/bkill)(1), [bhist](/man/bhist)(1)

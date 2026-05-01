@@ -1,5 +1,3 @@
-# TLDR
-
 # TAGLINE
 
 Share USB devices over IP networks
@@ -84,4 +82,4 @@ Requires kernel modules on both server and client. Network latency affects devic
 
 # SEE ALSO
 
-[lsusb](/man/lsusb)(8)
+[lsusb](/man/lsusb)(8), [modprobe](/man/modprobe)(8)

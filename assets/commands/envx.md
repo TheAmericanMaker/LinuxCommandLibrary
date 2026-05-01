@@ -72,4 +72,4 @@ Variable expansion may have security implications with untrusted input. .env fil
 
 # SEE ALSO
 
-[dotenv](/man/dotenv)(1), [env](/man/env)(1), [direnv](/man/direnv)(1)
+[env](/man/env)(1), [direnv](/man/direnv)(1)

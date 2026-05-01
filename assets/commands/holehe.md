@@ -12,13 +12,17 @@ checks if an email is registered on various websites
 
 ```holehe [email@example.com] --csv```
 
-**Check multiple emails**
+**Output only positive results**
 
-```holehe [email1@example.com] [email2@example.com]```
+```holehe --only-used [email@example.com]```
 
-**Output only positives**
+**Disable colored output**
 
-```holehe [email@example.com] --only-used```
+```holehe --no-color [email@example.com]```
+
+**Set request timeout**
+
+```holehe --timeout [10] [email@example.com]```
 
 # SYNOPSIS
 

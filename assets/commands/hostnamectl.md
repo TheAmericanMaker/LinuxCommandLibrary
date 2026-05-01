@@ -98,4 +98,4 @@ The static hostname should be a single valid DNS label (no spaces, only alphanum
 
 # SEE ALSO
 
-[hostname](/man/hostname)(1), [systemd-hostnamed](/man/systemd-hostnamed)(8), [machine-info](/man/machine-info)(5)
+[hostname](/man/hostname)(1), [systemctl](/man/systemctl)(1)

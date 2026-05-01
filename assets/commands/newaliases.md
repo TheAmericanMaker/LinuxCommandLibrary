@@ -64,4 +64,4 @@ newaliases has been part of Unix mail systems since the early days of sendmail, 
 
 # SEE ALSO
 
-[aliases](/man/aliases)(5), [sendmail](/man/sendmail)(8), [postfix](/man/postfix)(1), [postalias](/man/postalias)(1)
+[sendmail](/man/sendmail)(8), [postfix](/man/postfix)(1)

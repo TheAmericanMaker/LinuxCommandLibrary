@@ -47,12 +47,27 @@ While primarily intended to assemble output from compilers like **gcc**, it can 
 **--32** / **--64**
 > Generate 32-bit or 64-bit code (x86)
 
-**-W**
-> Suppress warning messages
+**-W**, **--no-warn**
+> Suppress warning messages.
+
+**--warn**
+> Do not suppress warnings (default).
+
+**--fatal-warnings**
+> Treat warnings as errors.
+
+**-a**[_letters_]
+> Turn on listings; suboptions include _h_ (high-level), _l_ (assembly), _s_ (symbols), _n_ (omit forms processing).
+
+**--statistics**
+> Print processing statistics (max-space, total-time).
+
+**-march=**_CPU_
+> Assemble for a specific CPU architecture.
 
 # CAVEATS
 
-Assembly syntax varies between architectures. GNU as uses AT&T syntax by default on x86, which differs from Intel syntax. Use **.intel_syntax noprefix** directive for Intel syntax. The **-f** flag should only be used with compiler-generated output as it skips syntax validation.
+Assembly syntax varies between architectures. GNU as uses AT&T syntax by default on x86, which differs from Intel syntax. Use **.intel_syntax noprefix** directive for Intel syntax. The **-f** flag should only be used with compiler-generated output, since it skips whitespace and comment preprocessing that hand-written sources may rely on.
 
 # HISTORY
 

@@ -1,6 +1,6 @@
 # TAGLINE
 
-pipes two commands but returns the exit status of the first command instead of
+pipes two commands and returns the exit status of the first command
 
 # TLDR
 

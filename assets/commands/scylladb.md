@@ -150,4 +150,4 @@ ScyllaDB was founded in **2015** by **Avi Kivity** (KVM creator) and **Dor Laor*
 
 # SEE ALSO
 
-[cqlsh](/man/cqlsh)(1), [nodetool](/man/nodetool)(1), [cassandra](/man/cassandra)(1)
+[cqlsh](/man/cqlsh)(1)

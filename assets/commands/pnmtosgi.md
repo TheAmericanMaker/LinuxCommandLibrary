@@ -18,11 +18,17 @@ Convert PNM to SGI image format
 
 # PARAMETERS
 
+**-verbatim**
+> No compression (default).
+
 **-rle**
 > Use RLE compression.
 
-**-verbatim**
-> No compression.
+**-imagename** _name_
+> Set the image name field stored inside the SGI file.
+
+**-mtime** _seconds_
+> Set the modification time stored inside the file.
 
 # DESCRIPTION
 

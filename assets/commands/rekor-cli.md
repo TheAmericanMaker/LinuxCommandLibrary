@@ -95,4 +95,4 @@ Requires network access to Rekor server. Entries are public. Key management sepa
 
 # SEE ALSO
 
-[cosign](/man/cosign)(1), [fulcio](/man/fulcio)(1), [sigstore](/man/sigstore)(1)
+[cosign](/man/cosign)(1), [fulcio](/man/fulcio)(1)

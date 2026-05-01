@@ -22,6 +22,9 @@
 ```[cline](/man/cline)```
 ```[ra-aid](/man/ra-aid)```
 ```[lazyagent](/man/lazyagent)```
+```[dirac](/man/dirac)```
+```[vtcode](/man/vtcode)```
+```[wuphf](/man/wuphf)```
 
 ## AI Assistants
 ```[openclaw](/man/openclaw)```
@@ -61,3 +64,10 @@
 ```[rekal](/man/rekal)```
 ```[revdiff](/man/revdiff)```
 ```[smolvm](/man/smolvm)```
+```[auto-round](/man/auto-round)```
+```[cuabot](/man/cuabot)```
+```[kanwas](/man/kanwas)```
+```[yourmemory](/man/yourmemory)```
+```[llmcat](/man/llmcat)```
+```[memweave](/man/memweave)```
+```[agentbox](/man/agentbox)```

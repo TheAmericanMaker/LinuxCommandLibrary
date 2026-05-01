@@ -72,6 +72,29 @@ D language package manager and build tool
 **describe**
 > Show project description.
 
+**search**
+> Search the package registry.
+
+**list**
+> List installed packages.
+
+# COMMON OPTIONS
+
+**--build=**_TYPE_
+> Build type: debug, release, release-debug, unittest, profile, docs.
+
+**--compiler=**_NAME_
+> Use a specific compiler (dmd, ldc2, gdc).
+
+**--arch=**_ARCH_
+> Force a specific target architecture (e.g. x86_64).
+
+**--config=**_NAME_
+> Use a specific build configuration from dub.json.
+
+**-v**, **--verbose**
+> Print verbose output.
+
 # CONFIGURATION
 
 **dub.json** or **dub.sdl**
