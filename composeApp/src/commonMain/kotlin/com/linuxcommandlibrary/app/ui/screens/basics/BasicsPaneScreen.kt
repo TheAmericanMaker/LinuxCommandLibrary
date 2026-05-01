@@ -41,6 +41,7 @@ import com.linuxcommandlibrary.app.ui.screens.basicgroups.BasicEditorViewModel
 import com.linuxcommandlibrary.app.ui.screens.basicgroups.BasicGroupsScreen
 import com.linuxcommandlibrary.app.ui.screens.basicgroups.BasicGroupsViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.currentKoinScope
 import org.koin.compose.koinInject
@@ -60,6 +61,7 @@ internal fun BasicsPaneScreen(
     stack: SnapshotStateList<TabStackEntry>,
     onPopStack: () -> Unit,
     lastBasicsGroupId: Long?,
+    isExpanded: Boolean,
 ) {
     val categoriesViewModel: BasicCategoriesViewModel = koinInject()
     val basicsRepository: BasicsRepository = koinInject()
@@ -71,6 +73,19 @@ internal fun BasicsPaneScreen(
         val id = pendingSelection ?: return@LaunchedEffect
         navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, id)
         onSelectionConsumed()
+    }
+
+    // Two-pane layouts: pre-select the first category once data loads so the detail
+    // pane shows real content instead of an empty placeholder.
+    LaunchedEffect(isExpanded) {
+        if (!isExpanded) return@LaunchedEffect
+        val list = categoriesViewModel.basicCategories.first { it.isNotEmpty() }
+        if (navigator.currentDestination?.contentKey == null &&
+            stack.isEmpty() &&
+            pendingSelection == null
+        ) {
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, list.first().id)
+        }
     }
 
     LaunchedEffect(navigator.currentDestination?.contentKey, categories) {

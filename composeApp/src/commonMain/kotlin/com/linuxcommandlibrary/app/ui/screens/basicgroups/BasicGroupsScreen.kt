@@ -129,6 +129,7 @@ fun BasicGroupColumn(
         Icon(
             painter = painter,
             contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(40.dp),
         )
         Text(
@@ -142,7 +143,7 @@ fun BasicGroupColumn(
         Icon(
             imageVector = AppIcons.ExpandMore,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.rotate(chevronRotation),
         )
     }

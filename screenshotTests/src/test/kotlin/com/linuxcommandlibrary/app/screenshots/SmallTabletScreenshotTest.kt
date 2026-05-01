@@ -4,6 +4,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalInspectionMode
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
+import com.android.resources.ScreenOrientation
 import com.linuxcommandlibrary.app.App
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.setResourceReaderAndroidContext
@@ -12,11 +13,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.koin.compose.KoinApplication
 
-class TabletScreenshotTest {
+class SmallTabletScreenshotTest {
 
     @get:Rule
     val paparazzi: Paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_TABLET.copy(softButtons = false),
+        deviceConfig = DeviceConfig.NEXUS_7.copy(
+            softButtons = false,
+            orientation = ScreenOrientation.LANDSCAPE,
+        ),
         showSystemUi = true,
         useDeviceResolution = true,
         maxPercentDifference = 0.1,

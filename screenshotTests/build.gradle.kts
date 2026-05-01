@@ -54,6 +54,7 @@ val snapshotsDir = layout.projectDirectory.dir("src/test/snapshots/images")
 val artDir = layout.projectDirectory.dir("../art")
 val fastlanePhone = layout.projectDirectory.dir("../fastlane/metadata/android/en-US/images/phoneScreenshots")
 val fastlaneTablet = layout.projectDirectory.dir("../fastlane/metadata/android/en-US/images/tenInchScreenshots")
+val fastlaneSmallTablet = layout.projectDirectory.dir("../fastlane/metadata/android/en-US/images/sevenInchScreenshots")
 
 tasks.register("updateScreenshots") {
     dependsOn("recordPaparazziDebug")
@@ -62,6 +63,7 @@ tasks.register("updateScreenshots") {
     val artDirFile = artDir.asFile
     val fastlanePhoneFile = fastlanePhone.asFile
     val fastlaneTabletFile = fastlaneTablet.asFile
+    val fastlaneSmallTabletFile = fastlaneSmallTablet.asFile
 
     doLast {
         val phoneMap =
@@ -78,6 +80,7 @@ tasks.register("updateScreenshots") {
 
         fastlanePhoneFile.mkdirs()
         fastlaneTabletFile.mkdirs()
+        fastlaneSmallTabletFile.mkdirs()
 
         phoneMap.forEach { (testName, fastlaneNumber) ->
             val phoneSnap =
@@ -91,6 +94,12 @@ tasks.register("updateScreenshots") {
                     ?: error("Missing tablet snapshot for $testName")
             tabletSnap.copyTo(fastlaneTabletFile.resolve("$fastlaneNumber.png"), overwrite = true)
             println("Tablet -> fastlane/$fastlaneNumber.png")
+
+            val smallTabletSnap =
+                allSnapshots.firstOrNull { it.name.endsWith("_SmallTabletScreenshotTest_$testName.png") }
+                    ?: error("Missing 7\" tablet snapshot for $testName")
+            smallTabletSnap.copyTo(fastlaneSmallTabletFile.resolve("$fastlaneNumber.png"), overwrite = true)
+            println("7\" Tablet -> fastlane/$fastlaneNumber.png")
         }
 
         // README art: phone 01,02 -> screen-android-{1,2}.png; tablet 01,02 -> screen-tablet-{1,2}.png

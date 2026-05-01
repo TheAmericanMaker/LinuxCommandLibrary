@@ -58,6 +58,7 @@ private fun BasicsTab(state: LinuxNavState, withTabStackOverlay: Boolean) {
             stack = basicsStack,
             onPopStack = { state.popStack(RouteKey.Basics) },
             lastBasicsGroupId = state.lastBasicsGroupId,
+            isExpanded = !withTabStackOverlay,
         )
         // Wide layouts render the stack inside the detail pane; mobile overlays the full pane.
         if (withTabStackOverlay) {
@@ -83,6 +84,7 @@ private fun CommandsTab(state: LinuxNavState, withTabStackOverlay: Boolean) {
             onNavigate = state::onNavigate,
             stack = commandsStack,
             onPopStack = { state.popStack(RouteKey.Commands) },
+            isExpanded = !withTabStackOverlay,
         )
         if (withTabStackOverlay) {
             TabStackTop(

@@ -31,6 +31,7 @@ import com.linuxcommandlibrary.app.ui.screens.commanddetail.CommandDetailPane
 import com.linuxcommandlibrary.app.ui.screens.commandlist.CommandListScreen
 import com.linuxcommandlibrary.app.ui.screens.commandlist.CommandListViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -45,6 +46,7 @@ internal fun CommandsPaneScreen(
     onNavigate: (NavEvent) -> Unit,
     stack: SnapshotStateList<TabStackEntry>,
     onPopStack: () -> Unit,
+    isExpanded: Boolean,
 ) {
     val listViewModel: CommandListViewModel = koinInject()
 
@@ -52,6 +54,20 @@ internal fun CommandsPaneScreen(
         val name = pendingSelection ?: return@LaunchedEffect
         navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, name)
         onSelectionConsumed()
+    }
+
+    // Two-pane layouts: pre-select the first command once data loads so the detail
+    // pane shows real content instead of an empty placeholder. Compact (single-pane)
+    // skips this — auto-pushing to detail on launch would be jarring.
+    LaunchedEffect(isExpanded) {
+        if (!isExpanded) return@LaunchedEffect
+        val list = listViewModel.commands.first { it.isNotEmpty() }
+        if (navigator.currentDestination?.contentKey == null &&
+            stack.isEmpty() &&
+            pendingSelection == null
+        ) {
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, list.first().name)
+        }
     }
 
     // Hoisted so the LazyColumn keeps its scroll position across AnimatedPane's
